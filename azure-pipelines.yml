@@ -18,7 +18,9 @@ stages:
       - job: ValidationJob
         displayName: 'Validating Bicep File'
         steps:
+          - checkout: self
           - task: AzureCLI@2
-            displayName: 'ValidationStep'
             inputs:
-              
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: 'az bicep build --file main.bicep'
