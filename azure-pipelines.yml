@@ -21,6 +21,7 @@ stages:
           - checkout: self
           - task: AzureCLI@2
             inputs:
+              azureSubscription: 'sc-project18'
               scriptType: 'bash'
               scriptLocation: 'inlineScript'
               inlineScript: 'az bicep build --file main.bicep'
