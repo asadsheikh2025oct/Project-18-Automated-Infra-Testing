@@ -28,6 +28,7 @@ stages:
 
       - deployment: DeploymentStep
         displayName: 'deploying bicep'
+        environment: production
         strategy:
           runOnce:
             deploy:
