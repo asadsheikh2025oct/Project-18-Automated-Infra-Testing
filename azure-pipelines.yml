@@ -25,3 +25,25 @@ stages:
               scriptType: 'bash'
               scriptLocation: 'inlineScript'
               inlineScript: 'az bicep build --file main.bicep'
+
+      - deployment: DeploymentStep
+        displayName: 'deploying bicep'
+        strategy:
+          runOnce:
+            deploy:
+              pool:
+                vmImage: 'ubuntu-latest'
+              steps:
+                - checkout: self
+                - task: AzureResourceManagerTemplateDeployment@3
+                  displayName: 'DeployingResourceNow'
+                  inputs:
+                    deploymentScope: 'Resource Group'
+                    azureResourceManagerConnection: 'sc-project18'
+                    subscriptionId: 'f2f1d6df-9422-48cb-abf1-0a4eb095ad4a'
+                    action: 'Create Or Update Resource Group'
+                    resourceGroupName: 'project18'
+                    location: 'UK West'
+                    templateLocation: 'Linked artifact'
+                    csmFile: 'main.bicep'
+                    deploymentMode: 'Incremental'
