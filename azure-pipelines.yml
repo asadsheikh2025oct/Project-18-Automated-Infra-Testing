@@ -26,6 +26,11 @@ stages:
               scriptLocation: 'inlineScript'
               inlineScript: 'az bicep build --file main.bicep'
 
+  - stage: Deploy
+    displayName: 'Deploy Stage'
+    dependsOn: Bicep
+    condition: succeeded()
+    jobs:
       - deployment: DeploymentStep
         displayName: 'deploying bicep'
         environment: production
@@ -35,7 +40,7 @@ stages:
               pool:
                 vmImage: 'ubuntu-latest'
               steps:
-                - checkout: self
+                # - checkout: self
                 - task: AzureResourceManagerTemplateDeployment@3
                   displayName: 'DeployingResourceNow'
                   inputs:
@@ -48,3 +53,29 @@ stages:
                     templateLocation: 'Linked artifact'
                     csmFile: 'main.bicep'
                     deploymentMode: 'Incremental'
+
+  - stage: PyTest
+    displayName: 'Testing Stage'
+    jobs:
+      - job: ValidateResourceConfig
+        steps:
+          - checkout: self
+          - task: AzureCLI@2
+            inputs:
+              azureSubscription: 'sc-project18'
+              scriptType: 'bash'
+              scriptLocation: 'inlineScript'
+              inlineScript: |
+                  pip install azure-mgmt-storage azure-identity pytest
+                  pytest test_infrastructure.py --junitxml=junit/test-results.xml
+
+          - task: PublishTestResults@2
+            condition: succeededOrFailed()
+            inputs:
+              testResultsFormat: 'JUnit'
+              testResultsFiles: '**/test-results.xml'
+              testRunTitle: 'Resource Validation'
+
+
+
+              
