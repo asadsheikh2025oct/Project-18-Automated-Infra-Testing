@@ -11,7 +11,7 @@ resource storage 'Microsoft.Storage/storageAccounts@2023-05-01' ={
   kind: 'StorageV2'
   properties: {
     accessTier: 'Hot'
-    allowBlobPublicAccess: true
+    allowBlobPublicAccess: false
     supportsHttpsTrafficOnly: false
   }
 }
