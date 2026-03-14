@@ -1,6 +1,7 @@
 param location string = 'ukwest'
 param storageAccountName string = 'sttesting202603140000'
 
+// deploying storage account
 resource storage 'Microsoft.Storage/storageAccounts@2023-05-01' ={
   name: storageAccountName
   location: location
